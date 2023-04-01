@@ -1,0 +1,98 @@
+##########Creation BD##########
+CREATE DATABASE IF NOT EXISTS donation_website;
+USE donation_website;
+
+##########Creation Table##########
+
+##########members##########
+
+CREATE TABLE IF NOT EXISTS members (
+  member_id INT PRIMARY KEY AUTO_INCREMENT,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  phone_number VARCHAR(20) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  date_registration Date,
+  is_admin BOOLEAN DEFAULT FALSE,
+  is_active BOOLEAN DEFAULT TRUE
+);
+
+##########visiteurs##########
+
+CREATE TABLE visiteurs (
+  visitor_id INT NOT NULL AUTO_INCREMENT,
+  first_nameVARCHAR(50) NOT NULL,
+  last_nameVARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  phone_number VARCHAR(20),
+  date_creation Date,
+  PRIMARY KEY (id)
+);
+
+##########Supports##########
+
+CREATE TABLE Supports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  visitor_id INT NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  FOREIGN KEY (visitor_id) REFERENCES visiteurs(visitor_id )
+);
+
+
+##########Message##########
+
+CREATE TABLE Message(
+  id INT NOT NULL AUTO_INCREMENT,
+  visitor_id INT NOT NULL,
+  message TEXT,
+  PRIMARY KEY (id),
+  FOREIGN KEY visitor_id REFERENCES visiteurs(visitor_id )
+);
+
+
+##########affiliation_requests##########
+
+CREATE TABLE IF NOT EXISTS affiliation_requests (
+  request_id INT PRIMARY KEY AUTO_INCREMENT,
+  visitor_id INT NOT NULL,
+  is_accepted BOOLEAN,
+  FOREIGN KEY (visitor_id) REFERENCES visiteurs(visitor_id ),
+  is_Read BOOLEAN 
+);
+
+
+##########campaigns##########
+
+CREATE TABLE IF NOT EXISTS campaigns (
+  campaign_id INT PRIMARY KEY AUTO_INCREMENT,
+  member_id INT NOT NULL,
+  campaign_name VARCHAR(100) NOT NULL,
+  campaign_description TEXT,
+  start_date Date ,
+  is_active BOOLEAN DEFAULT TRUE,
+  FOREIGN KEY (member_id) REFERENCES members(member_id)
+);
+
+##########campaign_photos##########
+
+CREATE TABLE IF NOT EXISTS campaign_photos (
+  photo_id INT PRIMARY KEY AUTO_INCREMENT,
+  campaign_id INT NOT NULL,
+  photo_url VARCHAR(200) NOT NULL,
+  photo_description TEXT,
+  FOREIGN KEY (campaign_id) REFERENCES campaigns(campaign_id)
+);
+
+##########donations ##########
+
+CREATE TABLE IF NOT EXISTS donations (
+  donation_id INT PRIMARY KEY AUTO_INCREMENT,
+  visitor_id INT NOT NULL,
+  campaign_id INT NOT NULL,
+  donationType VARCHAR(100) NOT NULL,
+  donationNbrPieace VARCHAR(100) ,
+  donation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY (visitor_id) REFERENCES visiteurs(visitor_id ),
+  FOREIGN KEY (campaign_id) REFERENCES campaigns(campaign_id)
+);

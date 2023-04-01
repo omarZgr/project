@@ -1,0 +1,92 @@
+CREATE DATABASE IF NOT EXISTS donation_website;
+USE donation_website;
+
+CREATE TABLE IF NOT EXISTS members (
+  member_id INT PRIMARY KEY AUTO_INCREMENT,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  phone_number VARCHAR(20) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  date_registration Date,
+  is_admin BOOLEAN DEFAULT FALSE,
+  is_active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS campaigns (
+  campaign_id INT PRIMARY KEY AUTO_INCREMENT,
+  member_id INT NOT NULL,
+  campaign_name VARCHAR(100) NOT NULL,
+  campaign_description TEXT,
+  start_date Date ,
+  is_active BOOLEAN DEFAULT TRUE,
+  FOREIGN KEY (member_id) REFERENCES members(member_id)
+);
+
+CREATE TABLE IF NOT EXISTS donations (
+  donation_id INT PRIMARY KEY AUTO_INCREMENT,
+  member_id INT NOT NULL,
+  campaign_id INT NOT NULL,
+  donation_amount DECIMAL(10,2) NOT NULL,
+  donation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (member_id) REFERENCES members(member_id),
+  FOREIGN KEY (campaign_id) REFERENCES campaigns(campaign_id)
+);
+
+CREATE TABLE IF NOT EXISTS affiliation_requests (
+  request_id INT PRIMARY KEY AUTO_INCREMENT,
+  member_id INT NOT NULL,
+  request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_accepted BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (member_id) REFERENCES members(member_id)
+);
+
+CREATE TABLE IF NOT EXISTS campaign_photos (
+  photo_id INT PRIMARY KEY AUTO_INCREMENT,
+  campaign_id INT NOT NULL,
+  photo_url VARCHAR(200) NOT NULL,
+  photo_description TEXT,
+  FOREIGN KEY (campaign_id) REFERENCES campaigns(campaign_id)
+);
+
+CREATE TABLE visiteurs (
+  id INT NOT NULL AUTO_INCREMENT,
+  nom VARCHAR(50) NOT NULL,
+  prenom VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  tel VARCHAR(20),
+  sujet VARCHAR(100) NOT NULL,
+  message TEXT NOT NULL,
+  date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE Supports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  visitor_id INT NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  message TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (visitor_id) REFERENCES Visitors(id)
+);
+
+
+CREATE TABLE dons (
+  id INT NOT NULL AUTO_INCREMENT,
+  id_visiteur INT NOT NULL,
+  montant DECIMAL(10, 2) NOT NULL,
+  date_don DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  message TEXT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_visiteur) REFERENCES visiteurs(id)
+);
+
+CREATE TABLE Message(
+  id INT NOT NULL AUTO_INCREMENT,
+  id_visiteur INT NOT NULL,
+  message TEXT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_visiteur) REFERENCES visiteurs(id)
+);
+
+
